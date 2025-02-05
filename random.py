@@ -1,0 +1,1 @@
+# csv, text, excel - read write update append, in binary as well
