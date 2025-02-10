@@ -19,7 +19,7 @@ def parser(ip):
     if "csvlook" in ip:
         
         filepath=ip[len(ip)-1]
-        print(ip)
+
         # sys.exit()
         #if delimiter present, setting delimiter
         if "-d" in ip:
@@ -82,8 +82,8 @@ def parser(ip):
 
             #if range of columns needed
             else:
-                for words in result:
-                    print(quotechar+"".join(words)+quotechar, end=f'{delimiter}')
+                for word in result:
+                    print(quotechar+"".join(word)+quotechar, end=f'{delimiter}')
             print()
     else:
         sys.exit()

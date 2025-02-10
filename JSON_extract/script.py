@@ -26,10 +26,10 @@ with open("Python_script.py", 'r') as file:
                 json_data['package'].append(words[1])
             #for functions
             elif words[0] == "def":
-                json_data['function'].append(words[1])
+                json_data['function'].append(words[1].strip())
             #for classes
             elif words[0] == "class":
-                json_data['class'].append(words[1])
+                json_data['class'].append(words[1].strip())
             #for variables
             elif words[1] == '=':
                 json_data['variable'].append(words[0])
