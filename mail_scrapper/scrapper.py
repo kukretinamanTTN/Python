@@ -24,7 +24,7 @@ def parse_vals(user, pw, all_info):
         words = len(body.split())
 
         #instance of mail_info class
-        # all_info[i] = mail_info(subject, date, from_mail, words, lines, attachments=attachments).info
+        all_info[i] = mail_info(subject, date, from_mail, words, lines, attachments=attachments).info
 
         #Conditions -
         #Attachments present
@@ -36,5 +36,5 @@ def parse_vals(user, pw, all_info):
         #     all_info[i] = mail_info(subject, date, from_mail, words, lines, attachments=attachments).info
 
         # #Image attachments present
-        if [attachment.find("jpg") or attachment.find("jpeg") or attachment.find("png") for attachment in attachments]:
-            all_info[i] = mail_info(subject, date, from_mail, words, lines, attachments=attachments).info
+        # if [attachment.find("jpg") or attachment.find("jpeg") or attachment.find("png") for attachment in attachments]:
+        #     all_info[i] = mail_info(subject, date, from_mail, words, lines, attachments=attachments).info
