@@ -3,10 +3,8 @@ import json
 import maskpass
 
 if __name__ == "__main__":
-    # user = input("Enter Email ID: ")
-    user = "naman.kukreti@tothenew.com"
-    # pw = maskpass.askpass(mask="")
-    pw = 'rqimamupmyijhxdn'
+    user = input("Enter Email ID: ")
+    pw = maskpass.askpass(mask="")
 
     all_info = {}
     parse_vals(user, pw, all_info)    
