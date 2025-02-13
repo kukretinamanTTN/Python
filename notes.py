@@ -188,3 +188,44 @@ json_string = json.dumps(data, indent=4, sort_keys=True)
 json_string_deser = json.loads(json_string)
 print(json_string)
 print(json_string_deser)
+
+
+# function decorator
+def decorator(func):
+    def wrapper():
+        print("Before calling the function.")
+        func()
+        print("After calling the function.")
+    return wrapper
+
+@decorator
+def greet():
+    print("Hello, World!")
+
+# greet()
+
+a = [1,2,3,4,5]
+al = iter(a)
+# print(next(al))
+# print(next(al))
+
+
+
+# class decorator
+def election_age(fun):
+    def wrapper(self):
+        if self.age >= 18:
+            fun(self)
+    return wrapper
+
+class Person:
+    def __init__(self, age):
+        self.age = age
+    
+    @election_age
+    def vote(self):
+        print("You can vote")
+    
+
+# p1 = Person(24)
+# p1.vote()
