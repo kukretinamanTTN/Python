@@ -17,7 +17,6 @@ class getCall:
         self.url = url
     
     def request(self):
-        time.sleep(0.01)
         response = requests.get(self.url)
         if not response.ok: 
             raise ResponseException(response.status_code, response.reason)
@@ -26,7 +25,7 @@ class getCall:
 
 if __name__ == "__main__":
     try:
-        get_obj = getCall("https://github.com/kukretinamanTTN/Python")
+        get_obj = getCall("https://google.com/naman")
         print(get_obj.request())
     except ResponseException as e:
         print("Error in request status!", e)
