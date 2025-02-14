@@ -1,5 +1,4 @@
 import requests
-import time
 
 #Custom Exception Class
 class ResponseException(Exception):
