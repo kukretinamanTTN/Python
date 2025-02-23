@@ -8,10 +8,13 @@ def fetch_information(npi):
     What it does? - extracts API link and formats using npi, generates get response for the corresponding url.
     O/P - returns json
     """
-    url = api.link.format(npi)
-    response = requests.get(url)
-    data = response.json()
-    return data["results"][0]
+    try:
+        url = api.link.format(npi)
+        response = requests.get(url)
+        data = response.json()
+        return data["results"][0]
+    except Exception as e:
+        return {"NPI":npi, "Error":str(e)}
     
 
 def address_parser(address):
@@ -36,11 +39,14 @@ def address_subdict(data):
     What it does? - fetches Mailing address and Primary Practice Address from "address" key of the dictionary
     O/P - return address subdictionary
     """
-    addresses = data["addresses"]
-    return {
-        "Mailing Address": address_parser(addresses[0]),
-        "Primary Practice Address": address_parser(addresses[1])
-    }
+    try:
+        addresses = data["addresses"]
+        return {
+            "Mailing Address": address_parser(addresses[0]),
+            "Primary Practice Address": address_parser(addresses[1])
+        }
+    except Exception as e:
+        return {"Error":str(e)}
 
 if __name__ == "__main__":
     try:
