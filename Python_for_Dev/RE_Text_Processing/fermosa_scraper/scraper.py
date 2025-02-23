@@ -67,7 +67,7 @@ class PlantScraper:
             print("Error extracting plant names from text: ", str(e))
 
 
-    def extract_product_description(self, product_url):
+    def extract_plant_list(self, product_url):
         try:
             source = self.make_request(product_url)
             soup = BeautifulSoup(source, 'html5lib')
@@ -106,7 +106,7 @@ class PlantScraper:
                     is_variegated = "Not Eligible" if is_combo else "Yes" if "variegated" in product_title_txt.lower() else "No"
 
                     #extract plant names if it's a combo
-                    plant_names = self.extract_product_description(product_link) if is_combo else []
+                    plant_names = self.extract_plant_list(product_link) if is_combo else []
                     
                     #create ProductData object
                     product_data = ProductData(
