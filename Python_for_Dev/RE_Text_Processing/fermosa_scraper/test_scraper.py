@@ -31,7 +31,7 @@ class TestPlantScraper(TestCase):
         self.assertEqual(result, [])
 
     @patch('requests.get')
-    def test_make_request_success(self, mock_get):
+    def test_make_request(self, mock_get):
         """test case for HTTP request"""
         mock_get.return_value.text = "content"
         result = self.scraper.make_request(base_url)
