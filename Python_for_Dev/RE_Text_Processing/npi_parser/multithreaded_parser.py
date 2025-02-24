@@ -53,6 +53,11 @@ def address_subdict(data):
 
 
 def load_npis(file):
+    """
+    I/P - file containing NPIs
+    What it does? - extracts NPIs from text file.
+    O/P - returns list of NPIs
+    """
     try:
         with open(file, "r") as file:
             npi_list = [line.strip().replace('"', '') for line in file if line.strip()]
@@ -63,6 +68,11 @@ def load_npis(file):
 
 
 def processor(npi):
+    """
+    I/P - npis
+    What it does? - extracts NPIs from text file.
+    O/P - returns list of NPIs
+    """
     try:
         result = fetch_information(npi)
         result["addresses"] = address_subdict(result)
