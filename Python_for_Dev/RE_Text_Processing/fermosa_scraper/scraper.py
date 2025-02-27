@@ -70,7 +70,7 @@ class PlantScraper:
     def extract_plant_list(self, product_url):
         try:
             source = self.make_request(product_url)
-            soup = BeautifulSoup(source, 'html5lib')
+            soup = BeautifulSoup(source, 'html.parser')
             plant_names = []
             for plant in soup.find_all("div", class_="desc product-desc"):
                 names = self.extract_plant_names(plant.text.strip())
@@ -148,7 +148,6 @@ class PlantScraper:
 class DataExporter:
     def prepare_df(data):
         df_data = []
-        max_plants = 0
 
         for product in data:
             row = {
@@ -158,7 +157,7 @@ class DataExporter:
                 'Combo': product.is_combo,
                 'Variegated':product.is_variegated
             }
-            max_plants = max(max_plants, len(product.plants))
+
             for i, plant in enumerate(product.plants, 1):
                 row[f'Plant_{i}'] = plant
             df_data.append(row)
