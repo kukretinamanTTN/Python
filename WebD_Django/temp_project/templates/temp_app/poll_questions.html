@@ -1,0 +1,15 @@
+<h1>My Polls</h1>
+<ul>
+    {% for question in questions %}
+        <li><strong>{{ question.text }}</strong></li>
+        {% for choice in question.choice_set.all %}
+                {{ choice.text }} - {{ choice.votes }} votes
+                <form action="{% url 'vote_question' choice.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Vote</button>
+                    <br>
+                </form>
+        {% endfor %}
+        <br>
+    {% endfor %}
+</ul>
