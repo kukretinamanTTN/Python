@@ -82,6 +82,18 @@ def add_to_cart(request, food_id):
         return redirect("menu")
 
 @login_required
+def remove_from_cart(request, food_id):
+    cart = request.session.get("cart", {})
+    
+    # Remove the item if it afterexists
+    if str(food_id) in cart:
+        del cart[str(food_id)]
+    
+    request.session["cart"] = cart
+    return redirect("menu")
+
+
+@login_required
 def place_order(request):
     cart = request.session.get("cart", {})
     if not cart:
@@ -108,4 +120,3 @@ def clear_cart(request):
 def orders_view(request):
     orders = Order.objects.filter(customer=request.user).order_by("-created_at")
     return render(request, "customer/orders.html", {"orders": orders})
-

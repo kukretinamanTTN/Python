@@ -2,34 +2,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Menu</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .container { display: flex; justify-content: space-between; margin-top: 20px; }
-        .menu { width: 65%; text-align: left; }
-        .cart { width: 30%; padding: 10px; background: #f8f8f8; border: 1px solid #ddd; text-align: left; }
-        .logout { position: absolute; top: 10px; right: 20px; }
-        .filters { margin-bottom: 15px; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .navbar {
+            background: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        .navbar .right {
+            display: flex;
+            align-items: center;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .menu, .cart {
+            padding: 20px;
+        }
+        .menu {
+            width: 65%;
+            text-align: left;
+        }
+        .cart {
+            width: 30%;
+            background: #f8f8f8;
+            padding: 20px;
+            border-left: 3px solid #ddd;
+            border-radius: 10px;
+        }
+        .logout button {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .filters input, .filters button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .cart button {
+            background: #007bff;
+        }
     </style>
-</head>
 <body>
-    <!-- logout button -->
-    <div class="logout">
-        <a href="{% url 'logout' %}"><button>Logout</button></a>
+    <div class="navbar">
+        <div>
+            <a href="{% url 'menu' %}">Home</a>
+            <a href="{% url 'orders' %}">Orders</a>
+            {% if user.is_superuser %}
+                <a href="{% url 'insights' %}">Insights</a>
+            {% endif %}
+        </div>
+        <div class="right">
+            <span>Welcome, {{ user.username }}!</span>
+            <a href="{% url 'logout' %}" class="logout"><button>Logout</button></a>
+        </div>
     </div>
-
-    <!-- welcome message -->
-    <h1>Welcome, {{ user.username }}! Explore Our Delicious Menu</h1>
-
-    <!-- search and filter form -->
+    <h1>Explore Our Delicious Menu</h1>
     <form method="GET" class="filters">
         <input type="text" name="search" placeholder="Search by name" value="{{ search_query }}">
         <input type="number" name="max_price" placeholder="Max Price" value="{{ max_price }}" min="0">
         <button type="submit">Filter</button>
     </form>
-
     <div class="container">
-        <!-- left side: menu -->
         <div class="menu">
             <h2>Food Menu</h2>
             <ul>
@@ -40,8 +125,6 @@
                             <img src="{{ item.image.url }}" width="100">
                         {% endif %}
                         <p>{{ item.description }}</p>
-
-                        <!-- add to cart form -->
                         <form method="POST" action="{% url 'add_to_cart' item.id %}">
                             {% csrf_token %}
                             <label>Quantity:</label>
@@ -49,14 +132,11 @@
                             <button type="submit">Add to Cart</button>
                         </form>
                     </li>
-                    <br>
                 {% empty %}
                     <p>No items found matching your search/filter.</p>
                 {% endfor %}
             </ul>
         </div>
-
-        <!-- right side: cart -->
         <div class="cart">
             <h3>Your Cart</h3>
             {% if cart_items %}
@@ -64,6 +144,11 @@
                     {% for cart_item in cart_items %}
                         <li>
                             {{ cart_item.food.name }} ({{ cart_item.quantity }}) - Rs.{{ cart_item.food.price|floatformat:2 }}
+                            {% if cart_item.food.id %}
+                                <a href="{% url 'remove_from_cart' cart_item.food.id %}">
+                                    <button>Delete</button>
+                                </a>
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>
@@ -78,6 +163,5 @@
             </form>
         </div>
     </div>
-
 </body>
 </html>
