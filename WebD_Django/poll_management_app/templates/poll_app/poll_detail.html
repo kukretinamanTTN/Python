@@ -1,0 +1,10 @@
+{% block content %}
+    <h2>{{ poll.question }}</h2>
+    <ul>
+        {% for choice in poll.choice_set.all %}
+            <li><strong>{{ choice.choice_text }}</strong> : {{ choice.votes }} votes</li>
+        {% empty %}
+            <li>No choices available.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

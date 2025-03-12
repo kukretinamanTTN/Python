@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import *
+from .views import login_view, logout_view, poll_questions, vote_question
 
 urlpatterns = [
-    path('all_polls/', poll_question, name='poll_question'),
-    path('all_choices/<int:choice_id>', vote_question, name='vote_question')
+    path("login/", login_view, name="login"),
+    path("logout/", logout_view, name="logout"),
+    path("all_polls/", poll_questions, name="poll_questions"),  # Correct view name
+    path("vote/", vote_question, name="vote_question"),  # No choice_id in URL (handled via POST)
 ]
