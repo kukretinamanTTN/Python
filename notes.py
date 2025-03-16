@@ -229,3 +229,72 @@ class Person:
 
 # p1 = Person(24)
 # p1.vote()
+
+
+# nums = [1, 2, 3, 4, 5]
+# squared = list(map(lambda x: x ** 2, nums))  # [1, 4, 9, 16, 25]
+# evens = list(filter(lambda x: x % 2 == 0, nums))  # [2, 4]
+
+# a, b = 5, 10
+# a, b = b, a  # Now a=10, b=5
+
+
+
+# a, b = 5, 10
+# a, b = b, a  # Now a=10, b=5
+
+
+
+# a = [1, 2, 3]
+# b = a
+# print(a is b)  # True (same object)
+# print(a == b)  # True (same value)
+
+# c = [1, 2, 3]
+# print(a is c)  # False (different objects)
+# print(a == c)  # True (same value)
+
+
+
+'''
+A metaclass is simply a class that inherits from type and overrides its behavior:
+The type function can actually create classes dynamically:
+
+MyDynamicClass = type("MyDynamicClass", (object,), {"x": 42})
+
+obj = MyDynamicClass()
+print(obj.x)  # Output: 42
+
+
+
+Eg - 
+class MyMeta(type):
+    def __new__(cls, name, bases, attrs):
+        print(f"Creating class {name}")
+        return super().__new__(cls, name, bases, attrs)
+
+class MyClass(metaclass=MyMeta):
+    pass
+
+# Output: Creating class MyClass
+
+Explanation:
+
+    MyMeta is a subclass of type, making it a metaclass.
+    __new__() is called before the class is created.
+    The MyClass class is created using MyMeta, so it triggers the metaclass's __new__() method
+'''
+
+
+# class Singleton:
+
+#     def __new__(cls, *args, **kwargs):
+#         if not hasattr(cls,"instance"):
+#             cls.instance = super().__new__(cls)
+#         return cls.instance
+
+# # Testing Singleton behavior
+# obj1 = Singleton()
+# obj2 = Singleton()
+
+# print(obj1 is obj2)  # Output: True (Both are the same instance)
