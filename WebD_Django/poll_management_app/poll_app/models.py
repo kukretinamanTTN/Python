@@ -9,6 +9,12 @@ class Poll(models.Model):
     question = models.CharField(max_length=200)
     is_active = models.BooleanField(default=True)
 
+    #custom manager
+    active_polls = PollManager()
+
+    #default manager
+    objects = models.Manager()
+
     class Meta:
         permissions = [
             ("can_view_results", "Can view poll results"),
