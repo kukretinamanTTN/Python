@@ -1,0 +1,40 @@
+<div class="logout">
+    <a href="{% url 'logout' %}"><button>Logout</button></a>
+</div>
+
+{% for question in questions %}
+    <h3>{{ question.text }}</h3>
+
+    {% if question.id in voted_questions %}
+        <p><strong>You have already voted. Here are the results:</strong></p>
+        <ul>
+            {% for choice in question.choice_set.all %}
+                <li>{{ choice.text }} - {{ choice.votes }} votes</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <form method="post" action="{% url 'vote_question' %}">
+            {% csrf_token %}
+            {% for choice in question.choice_set.all %}
+                <label>
+                    <input type="radio" name="choice_id" value="{{ choice.id }}"> {{ choice.text }}
+                </label><br>
+            {% endfor %}
+            <button type="submit">Vote</button>
+        </form>
+    {% endif %}
+{% endfor %}
+
+{% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+

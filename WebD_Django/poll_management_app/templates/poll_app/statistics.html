@@ -1,0 +1,29 @@
+{% block content %}
+    <h2>Poll Statistics</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Poll Question</th>
+                <th>Choice</th>
+                <th>Total Votes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for poll in stats %}
+                {% for choice in poll.choice_set.all %}
+                    <tr>
+                        <td>{{ poll.question }}</td>
+                        <td>{{ choice.choice_text }}</td>
+                        <td> : {{ choice.votes }} </td>
+                {% empty %}
+                        <li>No choices available.</li>
+                {% endfor %}
+                    </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">No polls available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,9 @@
+<h2>{{ question.question_text }}</h2>
+<ul>
+    {% for choice in question.choice_set.all %}
+        <li>{{ choice.choice_text }} - {{ choice.votes }} votes</li>
+    {% empty %}
+        <li>No choices available.</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'question_list' %}">Back to Polls</a>
