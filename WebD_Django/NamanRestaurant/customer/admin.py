@@ -32,12 +32,23 @@ class FoodItemAdmin(admin.ModelAdmin):
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
+    fields = ("food_item", "quantity")  # Allow editing of food items and quantity
+    readonly_fields = ("food_item",)  # Make food item non-editable but allow quantity changes
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("id", "customer", "total_price", "created_at")
-    list_filter = ("created_at",)
-    search_fields = ("customer__username",)
+    list_display = ("id", "customer", "total_price", "status", "ordered_items", "created_at",)
+    list_filter = ("status", "created_at",)
+    search_fields = ("customer__username", "status",)
+    ordering = ("-created_at",)
+    list_editable = ("status",)
     inlines = [OrderItemInline]
+
+    def ordered_items(self, obj):
+        """Return a formatted list of ordered items"""
+        items = obj.orderitem_set.all()
+        return ", ".join([f"{item.food_item.name} (x{item.quantity})" for item in items])
+    
+    ordered_items.short_description = "Ordered Items"
 
 
 admin.site.register(FoodItem, FoodItemAdmin)

@@ -19,13 +19,19 @@ class FoodItem(models.Model):
         return str(self.name)
     
 class Order(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Completed', 'Completed'),
+    ]
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(FoodItem, through="OrderItem")
     total_price = models.DecimalField(max_digits=8, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+
 
     def __str__(self):
-        return f"Order {self.id} by {self.customer.username}"
+        return f"Order {self.id} by {self.customer.username} - {self.status}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

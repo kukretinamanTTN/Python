@@ -1,167 +1,131 @@
+{% extends 'customer/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Menu</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        .navbar {
-            background: #333;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-        }
-        .navbar .right {
-            display: flex;
-            align-items: center;
-        }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 30px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .menu, .cart {
-            padding: 20px;
-        }
-        .menu {
-            width: 65%;
-            text-align: left;
-        }
-        .cart {
-            width: 30%;
-            background: #f8f8f8;
-            padding: 20px;
-            border-left: 3px solid #ddd;
-            border-radius: 10px;
-        }
-        .logout button {
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .filters input, .filters button {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            background: #fff;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background: #218838;
-        }
-        .cart button {
-            background: #007bff;
-        }
-    </style>
-<body>
-    <div class="navbar">
-        <div>
-            <a href="{% url 'menu' %}">Home</a>
-            <a href="{% url 'orders' %}">Orders</a>
-            {% if user.is_superuser %}
-                <a href="{% url 'insights' %}">Insights</a>
-            {% endif %}
-        </div>
-        <div class="right">
-            <span>Welcome, {{ user.username }}!</span>
-            <a href="{% url 'logout' %}" class="logout"><button>Logout</button></a>
+
+{% block title %}Food Menu{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/menu.css' %}">
+<style>
+    /* Layout Fixes */
+
+    .filters input, .filters button, 
+    .food-item input, .food-item button, 
+    .cart-item .item-controls form button, 
+    .cart form button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .food-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .item-controls {
+        display: flex;
+        gap: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Explore Our Delicious Menu</h1>
+
+<form method="GET" class="filters">
+    <input type="text" name="search" placeholder="Search by name" value="{{ search_query }}">
+    <input type="number" name="max_price" placeholder="Max Price" value="{{ max_price }}" min="0">
+    <button type="submit" class="btn-primary">Filter</button>
+</form>
+
+<div class="container menu-container">
+    <div class="menu">
+        <h2>Food Menu</h2>
+        <div class="food-grid">
+            {% for item in food_items %}
+                <div class="food-item">
+                    <div class="food-image-container">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                        {% endif %}
+                        <div class="food-description">
+                            <p>{{ item.description }}</p>
+                        </div>
+                    </div>
+                    <div class="food-name">{{ item.name }}</div>
+                    <div class="food-price">Rs.{{ item.price }}</div>
+                    
+                    <!-- Add to Cart Form -->
+                    <form method="POST" action="{% url 'add_to_cart' item.id %}">
+                        {% csrf_token %}
+                        <label>Quantity:</label>
+                        <input type="number" name="quantity" value="1" min="1">
+                        <button type="submit" class="btn-success">Add to Cart</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p>No items found matching your search/filter.</p>
+            {% endfor %}
         </div>
     </div>
-    <h1>Explore Our Delicious Menu</h1>
-    <form method="GET" class="filters">
-        <input type="text" name="search" placeholder="Search by name" value="{{ search_query }}">
-        <input type="number" name="max_price" placeholder="Max Price" value="{{ max_price }}" min="0">
-        <button type="submit">Filter</button>
-    </form>
-    <div class="container">
-        <div class="menu">
-            <h2>Food Menu</h2>
+
+    <div class="cart">
+        <h3>Your Cart</h3>
+        {% if cart_items %}
             <ul>
-                {% for item in food_items %}
-                    <li>
-                        <strong>{{ item.name }}</strong> - Rs.{{ item.price }} <br>
-                        {% if item.image %}
-                            <img src="{{ item.image.url }}" width="100">
-                        {% endif %}
-                        <p>{{ item.description }}</p>
-                        <form method="POST" action="{% url 'add_to_cart' item.id %}">
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <div class="item-info">
+                        <strong>{{ item.food.name }}</strong> - Rs.{{ item.food.price }} x {{ item.quantity }}
+                    </div>
+                    <div class="item-controls">
+                        <!-- Increase Quantity Form -->
+                        <form method="POST" action="{% url 'update_cart' item.food.id 'increase' %}">
                             {% csrf_token %}
-                            <label>Quantity:</label>
-                            <input type="number" name="quantity" value="1" min="1">
-                            <button type="submit">Add to Cart</button>
+                            <button type="submit" class="cart-btn increase">+</button>
                         </form>
-                    </li>
+
+                        <!-- Decrease Quantity Form -->
+                        <form method="POST" action="{% url 'update_cart' item.food.id 'decrease' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="cart-btn decrease">-</button>
+                        </form>
+
+                        <!-- Remove Item Form -->
+                        <form method="POST" action="{% url 'update_cart' item.food.id 'remove' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="cart-btn remove">Remove</button>
+                        </form>
+                    </div>
+                </div>
+                <br>
                 {% empty %}
-                    <p>No items found matching your search/filter.</p>
+                <li>Your cart is empty.</li>
                 {% endfor %}
             </ul>
-        </div>
-        <div class="cart">
-            <h3>Your Cart</h3>
-            {% if cart_items %}
-                <ul>
-                    {% for cart_item in cart_items %}
-                        <li>
-                            {{ cart_item.food.name }} ({{ cart_item.quantity }}) - Rs.{{ cart_item.food.price|floatformat:2 }}
-                            {% if cart_item.food.id %}
-                                <a href="{% url 'remove_from_cart' cart_item.food.id %}">
-                                    <button>Delete</button>
-                                </a>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <p><strong>Total:</strong> Rs. {{ total_price|floatformat:2 }}</p>
-                <a href="{% url 'clear_cart' %}"><button>Clear Cart</button></a>
-            {% else %}
-                <p>Your cart is empty.</p>
-            {% endif %}
-            <form method="post" action="{% url 'place_order' %}">
+            <p><strong>Total:</strong> Rs. {{ total_price|floatformat:2 }}</p>
+            
+            <!-- Clear Cart Form -->
+            <form method="POST" action="{% url 'clear_cart' %}">
                 {% csrf_token %}
-                <button type="submit">Place Order</button>
+                <button type="submit" class="btn-danger">Clear Cart</button>
             </form>
-        </div>
+
+            <!-- Place Order Form -->
+            <form method="POST" action="{% url 'place_order' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-success">Place Order</button>
+            </form>
+        {% else %}
+            <p>Your cart is empty.</p>
+        {% endif %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

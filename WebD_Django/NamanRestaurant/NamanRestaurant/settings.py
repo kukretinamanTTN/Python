@@ -19,6 +19,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = '/static/'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -41,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'customer',
-    'system'
+    'system',
+    'kitchen'
 ]
 
 MIDDLEWARE = [
@@ -59,7 +67,7 @@ ROOT_URLCONF = 'NamanRestaurant.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/home/naman/TTN_Bootcamp/Python/WebD_Django/NamanRestaurant/templates'],
+        'DIRS': ['/home/naman/Python/WebD_Django/NamanRestaurant/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +82,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'NamanRestaurant.wsgi.application'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+        "LOCATION": "127.0.0.1:11211",  # Default Memcached port
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -82,8 +96,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'restaurant_db',  # Change this to your database name
-        'USER': 'postgres',  # Change this to your PostgreSQL username
-        'PASSWORD': 'postgres@123',  # Change this to your PostgreSQL password
+        'USER': 'naman',  # Change this to your PostgreSQL username
+        'PASSWORD': 'naman@123',  # Change this to your PostgreSQL password
         'HOST': 'localhost',  # Change if using a remote server
         'PORT': '5432',  # Default PostgreSQL port
     }

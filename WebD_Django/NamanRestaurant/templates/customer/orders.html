@@ -1,107 +1,40 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Orders</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        .navbar {
-            background: #333;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-        }
-        .navbar .right {
-            display: flex;
-            align-items: center;
-        }
-        .container {
-            max-width: 800px;
-            margin: 30px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            background: #fff;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .logout button {
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .back-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 15px;
-            background: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .back-btn:hover {
-            background: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="navbar">
-        <div>
-            <a href="{% url 'menu' %}">Home</a>
-            <a href="{% url 'orders' %}">Orders</a>
-        </div>
-        <div class="right">
-            <span>Welcome, {{ user.username }}!</span>
-            <a href="{% url 'logout' %}" class="logout"><button>Logout</button></a>
-        </div>
-    </div>
-    <div class="container">
-        <h2>Your Orders</h2>
-        {% if orders %}
-            <ul>
-                {% for order in orders %}
-                    <li>
-                        <strong>Order #{{ order.id }}</strong> - {{ order.created_at }} - Total: Rs.{{ order.total_price }}
-                        <ul>
+{% extends 'customer/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Your Orders</h2>
+
+    {% if orders %}
+        <div class="row">
+            {% for order in orders %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">Order #{{ order.id }}</h5>
+                        <p class="text-muted">Placed on: {{ order.created_at|date:"F d, Y H:i" }}</p>
+                        <p><strong>Status:</strong> <span class="badge bg-success">{{ order.status }}</span></p>
+                        <ul class="list-group mb-3">
                             {% for item in order.orderitem_set.all %}
-                                <li>{{ item.quantity }} x {{ item.food_item.name }}</li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <img src="{{ item.food_item.image.url }}" alt="{{ item.food_item.name }}" class="img-thumbnail" width="60">
+                                    <span class="ms-2">{{ item.food_item.name }}</span>
+                                </div>
+                                <span>x{{ item.quantity }}</span>
+                            </li>
                             {% endfor %}
                         </ul>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>You have no orders.</p>
-        {% endif %}
-        <a href="{% url 'menu' %}" class="back-btn">Back to Menu</a>
-    </div>
-</body>
-</html>
+                        <p class="fw-bold">Total: Rs.{{ order.total_price }}</p>
+                        {% if order.status == "Pending" %}
+                        <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger btn-sm">Cancel Order</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted">You have no orders yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
