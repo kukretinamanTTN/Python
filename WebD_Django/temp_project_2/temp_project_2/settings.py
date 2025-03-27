@@ -56,7 +56,7 @@ ROOT_URLCONF = 'temp_project_2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/home/naman/TTN_Bootcamp/Python/WebD_Django/temp_project_2/templates'],
+        'DIRS': ['/home/naman/Python/WebD_Django/temp_project_2/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
