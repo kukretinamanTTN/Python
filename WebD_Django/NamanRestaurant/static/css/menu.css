@@ -20,7 +20,7 @@ h1 {
 
 /* Ensure buttons appear in a single row */
 .item-controls {
-    display: flex;
+/*     display: flex; */
     align-items: center; /* Align vertically */
     gap: 8px; /* Space between buttons */
     margin-top: 5px;
@@ -77,7 +77,7 @@ h1 {
 /* Remove button */
 .cart-btn.remove {
     background: #dc3545; /* Red */
-    width: 40px; /* Slightly wider */
+    width: 80px; /* Slightly wider */
     display: flex;
     justify-content: center;
 }
@@ -96,6 +96,7 @@ h1 {
     border-radius: 10px;
     display: flex;
     justify-content: center;
+    flex-direction: column
 }
 
 .filters input, .filters button {

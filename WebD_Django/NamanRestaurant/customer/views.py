@@ -22,7 +22,6 @@ class SignupView(FormView):
         login(self.request, user)
         return super().form_valid(form)
 
-
 class LoginView(FormView):
     template_name = "customer/login.html"
     form_class = AuthenticationForm
@@ -32,7 +31,6 @@ class LoginView(FormView):
         user = form.get_user()
         login(self.request, user)
         return super().form_valid(form)
-
 
 class LogoutView(View):
     def get(self, request):
@@ -113,7 +111,6 @@ class AddToCartView(LoginRequiredMixin, View):
         cache.set(f"cart_{request.user.id}", cart, timeout=86400)
         return redirect("menu")
 
-
 class UpdateCartView(LoginRequiredMixin, View):
     def post(self, request, food_id, action):
         cart = cache.get(f"cart_{request.user.id}", {})
@@ -131,7 +128,6 @@ class UpdateCartView(LoginRequiredMixin, View):
 
         cache.set(f"cart_{request.user.id}", cart, timeout=86400)
         return redirect("menu")
-
 
 class ClearCartView(LoginRequiredMixin, View):
     def post(self, request):
